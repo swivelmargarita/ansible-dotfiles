@@ -1,0 +1,27 @@
+---
+- name: Make sure that the tmux plugin folder is created
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+    state: directory
+    recurse: yes
+    owner: "{{ ansible_env.USER }}"
+
+- name: Clone the tpm repository
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+    force: yes
+
+- name: Make sure that the tmux configuration folder is created
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/tmux"
+    state: directory
+    owner: "{{ ansible_env.USER }}"
+    mode: "0755"
+
+
+- name: Link the tmux configuration
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/tmux.conf"
+    dest: "{{ ansible_env.HOME }}/.config/tmux/tmux.conf"
+    state: link
